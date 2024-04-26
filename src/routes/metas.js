@@ -1,13 +1,18 @@
 const router = require("express").Router();
 const {
-  getLoginController,
-  postRegisterController,
-} = require("../controllers/authController");
+  getMetasController,
+  getMetasIdController,
+  postMetasController,
+  putMetasController,
+  deleteMetasController
+} = require("../controllers/metasController");
 
 //ROUTER AUTH
 
-router.post("/login", getLoginController);
-
-router.post("/register", postRegisterController);
+router.get("/", getMetasController);
+router.get("/:id", getMetasIdController);
+router.post("/", postMetasController);
+router.put("/:id", putMetasController);
+router.delete("/:id", deleteMetasController);
 
 module.exports = router;
