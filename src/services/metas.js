@@ -172,10 +172,39 @@ async function deleteMetas(req, res) {
   }
 }
 
+
+async function getAllMetasWithSubMetas(req, res) {
+  const client = await db.connect();
+  try {
+    // Obtener todas las metas
+    const { rows: metas } = await client.query("SELECT * FROM metas");
+
+    // Iterar sobre cada meta y obtener sus submetas
+    for (const meta of metas) {
+      // Consultar las submetas vinculadas a la meta actual
+      const { rows: subMetas } = await client.query(
+        "SELECT * FROM submetas WHERE meta_id = $1",
+        [meta.id]
+      );
+      // Agregar las submetas a la meta actual
+      meta.submetas = subMetas;
+    }
+
+    res.status(200).json(metas);
+  } catch (error) {
+    console.error("Error al obtener las metas y submetas:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  } finally {
+    await client.release(); // Liberar el cliente después de usarlo
+  }
+}
+
+
 module.exports = {
   createMetas,
   getMetas,
   getMetaById,
   updateMetas,
   deleteMetas,
+  getAllMetasWithSubMetas
 };
