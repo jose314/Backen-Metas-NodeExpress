@@ -25,10 +25,10 @@ async function getMetas(req, res) {
 // Función para obtener una meta por su ID
 async function getMetaById(req, res) {
   const client = await db.connect();
-  const { codigo } = req.params;
+  const { id } = req.params;
   try {
     const { rows } = await client.query("SELECT * FROM metas WHERE codigo = $1", [
-      codigo,
+      id,
     ]);
     if (rows.length === 0) {
       return res.status(404).json({ message: "Meta no encontrada" });
